@@ -1,4 +1,4 @@
-name: COBOL & SQLite CI/CD Pipeline (Module 8 V2) 
+name: COBOL & SQLite CI/CD Pipeline (Module 8 V3) 
 
 on:
   push:
