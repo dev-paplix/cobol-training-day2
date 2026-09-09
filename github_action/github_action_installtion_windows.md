@@ -238,8 +238,21 @@ jobs:
         shell: powershell
         run: |
           Write-Host "Running automated build steps on Windows..."
-          # Example Windows build invocation:
-          # cobc -x -free -I module_8/src module_8/src/app.cob -o module_8/bin/inventory_app.exe
+          if (!(Test-Path "module_8/bin")) {
+              New-Item -ItemType Directory -Path "module_8/bin" -Force | Out-Null
+          }
+          cobc -x -free -I module_8/src -Wall module_8/src/app.cob module_8/src/cob_sqlite.c -lsqlite3 -o module_8/bin/inventory_app.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          
+          Write-Host "Running automated test execution..."
+          if (Test-Path "inventory.db") { Remove-Item "inventory.db" -Force }
+          & "module_8/bin/inventory_app.exe"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          
+          if (Get-Command sqlite3 -ErrorAction SilentlyContinue) {
+              $rows = (sqlite3 inventory.db "SELECT count(*) FROM inventory;").Trim()
+              Write-Host "SQLite verification: $rows records found."
+          }
 ```
 
 ---

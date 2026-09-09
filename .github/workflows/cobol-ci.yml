@@ -1,0 +1,151 @@
+name: COBOL & SQLite CI/CD Pipeline (Module 8)
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'module_8/**'
+      - '.github/workflows/cobol-ci.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'module_8/**'
+      - '.github/workflows/cobol-ci.yml'
+  workflow_dispatch:
+
+jobs:
+  # =========================================================================
+  # Linux Job: Executes on GitHub-hosted Ubuntu cloud runner
+  # =========================================================================
+  build-and-test-linux:
+    name: Build & Test (Linux Ubuntu)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install GnuCOBOL & SQLite3 Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            gnucobol \
+            libcob4-dev \
+            sqlite3 \
+            libsqlite3-dev \
+            build-essential \
+            gcc \
+            make
+
+      - name: Diagnostic Toolchain Check
+        run: |
+          echo "=== Compiler Diagnostic Info ==="
+          cobc --version | head -n 2
+          gcc --version | head -n 1
+          sqlite3 --version
+
+      - name: Syntax Linting & Check
+        run: |
+          echo "Running GnuCOBOL syntax validation..."
+          make -C module_8 check
+
+      - name: Build Native Binary
+        run: |
+          echo "Compiling COBOL application with SQLite C-bridge..."
+          make -C module_8 build
+
+      - name: Run Automated Test Harness
+        run: |
+          echo "Executing automated test suite..."
+          make -C module_8 test
+
+      - name: Archive Linux Binary Artifact
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: inventory-app-linux-x64
+          path: module_8/bin/inventory_app
+          retention-days: 7
+
+  # =========================================================================
+  # Windows Job: Executes on Windows Self-Hosted Runner
+  # (Requires active self-hosted runner labeled 'windows' or 'windows-latest')
+  # =========================================================================
+  build-and-test-windows:
+    name: Build & Test (Windows Self-Hosted)
+    runs-on: [self-hosted, windows]
+    # Only run if triggered manually or if a runner is ready, or on push/PR:
+    continue-on-error: true
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Diagnostic Toolchain Check
+        shell: powershell
+        run: |
+          Write-Host "=== Diagnostic Toolchain Check ==="
+          git --version
+          if (Get-Command cobc -ErrorAction SilentlyContinue) {
+              cobc --version
+          } else {
+              Write-Error "GnuCOBOL (cobc) not found in PATH"
+              exit 1
+          }
+          if (Get-Command sqlite3 -ErrorAction SilentlyContinue) {
+              sqlite3 --version
+          } else {
+              Write-Warning "sqlite3 CLI not found in PATH"
+          }
+
+      - name: Syntax Linting & Check
+        shell: powershell
+        run: |
+          Write-Host "Running GnuCOBOL syntax validation on Windows..."
+          cobc -fsyntax-only -free -I module_8/src module_8/src/app.cob
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host "[PASS] Syntax check passed."
+
+      - name: Build Native Windows Binary
+        shell: powershell
+        run: |
+          Write-Host "Compiling COBOL application with SQLite C-bridge on Windows..."
+          if (!(Test-Path "module_8/bin")) {
+              New-Item -ItemType Directory -Path "module_8/bin" -Force | Out-Null
+          }
+          cobc -x -free -I module_8/src -Wall module_8/src/app.cob module_8/src/cob_sqlite.c -lsqlite3 -o module_8/bin/inventory_app.exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          Write-Host "[PASS] Built module_8/bin/inventory_app.exe successfully."
+
+      - name: Run Automated Test Harness
+        shell: powershell
+        run: |
+          Write-Host "Executing automated test suite on Windows..."
+          # Clean up any leftover database from prior runs
+          if (Test-Path "inventory.db") { Remove-Item "inventory.db" -Force }
+
+          # Execute the compiled binary
+          & "module_8/bin/inventory_app.exe"
+          if ($LASTEXITCODE -ne 0) {
+              Write-Error "Application execution failed with return code $LASTEXITCODE"
+              exit $LASTEXITCODE
+          }
+
+          # Assert SQLite database was populated
+          if (Get-Command sqlite3 -ErrorAction SilentlyContinue) {
+              $dbCount = (sqlite3 inventory.db "SELECT count(*) FROM inventory;").Trim()
+              Write-Host "Direct SQLite verification: $dbCount rows found."
+              if ($dbCount -ne "4") {
+                  Write-Error "Data integrity failure: Expected 4 records, found $dbCount"
+                  exit 1
+              }
+              Write-Host "[PASS] SQLite database data integrity asserted successfully."
+          }
+
+      - name: Archive Windows Binary Artifact
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: inventory-app-windows-x64
+          path: module_8/bin/inventory_app.exe
+          retention-days: 7
