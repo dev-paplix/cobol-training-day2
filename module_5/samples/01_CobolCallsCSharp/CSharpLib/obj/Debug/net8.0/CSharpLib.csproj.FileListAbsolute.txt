@@ -1,0 +1,12 @@
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/bin/Debug/net8.0/CSharpLib.deps.json
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/bin/Debug/net8.0/CSharpLib.dll
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/bin/Debug/net8.0/CSharpLib.pdb
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.GeneratedMSBuildEditorConfig.editorconfig
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.AssemblyInfoInputs.cache
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.AssemblyInfo.cs
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.csproj.CoreCompileInputs.cache
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.sourcelink.json
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.dll
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/refint/CSharpLib.dll
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/CSharpLib.pdb
+/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/obj/Debug/net8.0/ref/CSharpLib.dll

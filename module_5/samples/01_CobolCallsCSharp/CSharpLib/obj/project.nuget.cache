@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "7+c5csPQbArjsPCw29wQoRNXtlSJdmOS9hPiGaaltHDq2gj+T6txL+AE/xANMlGj0s72CkObeycmnofIntmMLQ==",
+  "dgSpecHash": "YOzpHRgLHpB58y60aiawl+uHv9iDCYgICk/hYya6FAcIftX66v818Rk+NrVSY8FhFtToVewkoc/9vBjvQD/VzA==",
   "success": true,
   "projectFilePath": "/home/wesi/codes/cobol-training/module_5/samples/01_CobolCallsCSharp/CSharpLib/CSharpLib.csproj",
   "expectedPackageFiles": [
     "/home/wesi/.nuget/packages/microsoft.dotnet.ilcompiler/8.0.30/microsoft.dotnet.ilcompiler.8.0.30.nupkg.sha512",
     "/home/wesi/.nuget/packages/microsoft.net.illink.tasks/8.0.30/microsoft.net.illink.tasks.8.0.30.nupkg.sha512",
+    "/home/wesi/.nuget/packages/runtime.linux-x64.microsoft.dotnet.ilcompiler/8.0.30/runtime.linux-x64.microsoft.dotnet.ilcompiler.8.0.30.nupkg.sha512",
+    "/home/wesi/.nuget/packages/microsoft.netcore.app.runtime.linux-x64/8.0.30/microsoft.netcore.app.runtime.linux-x64.8.0.30.nupkg.sha512",
+    "/home/wesi/.nuget/packages/microsoft.aspnetcore.app.runtime.linux-x64/8.0.30/microsoft.aspnetcore.app.runtime.linux-x64.8.0.30.nupkg.sha512",
     "/home/wesi/.nuget/packages/runtime.linux-x64.microsoft.dotnet.ilcompiler/8.0.30/runtime.linux-x64.microsoft.dotnet.ilcompiler.8.0.30.nupkg.sha512"
   ],
   "logs": []
